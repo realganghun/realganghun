@@ -26,3 +26,4 @@ finally : #error발생하던 안하던 무조건 통과하는 구간
     print('에러 유무에 상관없이 반드시 수행됨')
 
 print('end')
+print('aaaaaa')
