@@ -1,93 +1,144 @@
-# while 문을 사용 : 1 ~ 100 사이의 정수 중에서 3으로 끝나는 숫자만 출력하는 코드를 작성 하시오.
+#사용자 정의 함수
 
-# 출력 결과는 아래와 같다.
-# 3 13 23 33 43 53 63 73 83 93 (배점:10)
+"""
+def 함수명(가인수):
+    return 반환값 #1개만 반환, return이 없으면 return None
 
-# a = 1
-# while a <= 100:
-#     if a % 10 == 3:
-#         print(a, end = ' ')
-#     a += 1
+함수명(실인수) #함수 호출
+"""
 
+# def doFunc1():
+#     print('doFunc1 수행') #return이 따로 없으면 return None과 같음.
 
-# 아래 소스 코드의 빈 칸을 차례대로 채우시오.
-# i = 0
-# while True:
-#     if 1)__________:
-#         i += 1
-#         2)_________       
+# def doFunc2(name):
+#     print('name : ', name)
 
-#     if i > 100: 3)________
+# def doFunc3(arg1, arg2):
+#     re = arg1 + arg2
+#     return re
 
-#     print(i, end=' ')
-#     4)________
-# i = 0
-# while True:
-#     if i % 10 != 3:
-#         i += 1
-#         continue
-#     if i > 100: 
-#         break
+# def doFunc4(a1, a2):
+#     imsi = a1 + a2
+#     if imsi % 2 == 1:
+#         return
+#     else:
+#         return imsi
 
-#     print(i, end=' ')
-#     i += 1
+# doFunc1() #함수 호출
+# print('함수 주소는 ', doFunc1) #함수의 주소를 불러옴 -> <function doFunc1 at 0x000002B77951F920>
+# print('함수 주소는', id(doFunc1))
+# imsi = doFunc1
+# imsi() # <- 함수의 주소를 치환함
+# print()
+# doFunc1()
+# print('------------------')
+# print(doFunc1()) #함수 수행 후 갖고 돌아온 정보인 None을 print함 -> doFunc1 수행 None
 
+#----------------------------------------------------------------------------------------------------------
+# doFunc2(7)
+# doFunc2('으아아')
+#-------------------------------------------------------------------------------
+# print(doFunc3('신대웅', '개병신'))
+# print(doFunc3(5, 6))
+# result = doFunc3(5, 6)
+# print(result)
 
-# dan = 3
-# while dan <= 9:
-#     j = 1
-#     while j <= 9:
-#         print(f'{dan} * {j} = {dan * j}', end = ' ')
-#         j += 1
-#     print()
-#     dan += 2
+# print(doFunc4(3,4))
+# print(doFunc4(3,5))
+#------------------------------------------------------------------------------
+# def triArea(a, h):
+#     c = a*h/2
+#     triAreaPrint(c) #다른 함수 호출
 
-# 아래 코드가 동작하도록 자전거 클래스(Bicycle class)를 정의하시오.
+# def triAreaPrint(cc):
+#     print('삼각형의 면적은 ', cc)
 
-# 조건1 : 멤버 변수는 name, wheel, price 이다.
-# 조건2 : 바퀴 가격은 바퀴수 * 가격이다.
-
-# 실행 및 출력 결과)
-# gildong = Bicycle('길동', 2, 50000) # 생성자로 name, wheel, price 입력됨
-# gildong.display()
-
-# 길동님 자전거 바퀴 가격 총액은 100000원 입니다. (배점:10)
-
-# class Bicycle:
-#     def __init__(self, name, wheel, price):
-#         self.name = name
-#         self.wheel = wheel
-#         self.price = price
-#     def display(self):
-#         price = int(self.wheel * self.price)
-#         print(f'{self.name}님 자전거 바퀴 가격 총액은 {price}원 입니다.')
-
-# gildong = Bicycle('길동', 2, 50000)
-# gildong.display()
-
-
-# year = int(input('연도 입력 : '))
-
-# if (year % 4 == 0 and year % 100 != 0) or year % 400 == 0:
-#     print(f'{year}년은 윤년')
+# triArea(20,30)
+#---------------------------------------------------------------------------------------
+# def passResult(kor, eng):
+#     ss = kor + eng
+#     if ss >= 50:
+#         return True
+#     else:
+#         return False
+    
+# if passResult(20, 10):
+#     print('합격')
 # else:
-#     print(f'{year}년은 평년')
+#     print('불합격')
 
-# gg = lambda x, y:x + y
-# print(gg(1,2))
+# print()
+# def swapFunc(a,b):
+#     return b, a
 
-# for i in range(0,10):
-#     for j in range(0,i):
-#         msg1 = ''
-#         msg1 += ' '
-#         print(msg1, end = ' ')
-#     for k in range(10,i,-1):
-#         msg2 = ''
-#         msg2 += '*'
-#         print(msg2, end = ' ')
-#     print()
+# a = 10
+# b = 20
 
-# *v1, v2, v3 = {1, 2, 3, 4, 5, 1, 2, 3, 4, 5}
-# print(v1)
-# print(v2)
-# print(v3)
+# print(a, ' ', b)
+# print(swapFunc(a,b)) #함수는 하나의 값만 반환하므로 (20, 10)의 형태(tuple)로 반환됨
+
+#----------------------------------------------------------------------------------------
+# def funcTest():
+#     print('funcTest 멤버 처리')
+#     def funcInner():
+#         print('내부 함수')
+#     funcInner()
+
+# funcTest()
+#-------------------------------------------------------------------------------------------
+# def isOdd(para):
+#     return para%2==1 #홀수면 True 반환
+
+# mydict = {x:x*x for x in range(11) if isOdd(x)}
+# print(mydict)
+
+#변수의 생존 범위(scope rule)---------------------------------------------------------------------------
+#변수가 저장되는 이름공간은 변수가 어디서 선언되었는가에 따라 생존 시간이 다름
+#전역, 지역 변수
+
+
+# player = '전국대표' #전역변수 (현재 모듈 어디서든 호출 가능)
+# name = '한국인'
+
+# def funcSoccer():
+#     name = '홍길동' #지역변수 (현재 함수 내에서만 호출 가능)
+#     player = '박지성'
+#     city = '서울'
+#     print(f'이름은 {name} 수준은{player}')
+#     print(f'지역은 {city}')
+
+# funcSoccer()
+# print(f'이름 : {name} 수준 : {player}')
+# print(f'지역 : {city}')
+
+#Local -> Enclosing function -> Global -> Built-in 순서------------------------------------------
+# print()
+a = 10
+b = 20
+c = 30
+def Foo():
+    a = 7 # --> 지역변수
+    b = 100
+    def Bar():
+        global c #c가 Bar 함수의 멤버가 아니라 파일의 멤버가 된다. 한마디로 전역변수가 됨
+        nonlocal b #현재 function의 한단계 상위 멤버가 됨. Bar의 멤버가 아니라 Foo의 멤버가 되는 것
+        b = 8 # --> 지역변수
+        print(f'Bar 함수 수행 후 a : {a}, b : {b}, c : {c}')
+        c = 3
+        b = 200
+    Bar()
+    print(f'Foo 함수 수행 후 a : {a}, b : {b}, c : {c}')
+
+Foo()
+print(f'함수 수행 후 a : {a}, b : {b}, c : {c}')
+# --------> 함수는 별도의 공간을 갖고 있음!
+
+g = 1
+def func():
+    global g
+    a = g
+    g = 2 # <--- 이때, g는 지역변수가 됨
+    return a
+
+print(func())
+print('g : ', g)
