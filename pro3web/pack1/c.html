@@ -1,0 +1,69 @@
+<!-- html의 table -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    --- table(표) tag --- <br>
+    <table border="5">
+        <tr>
+            <th>번호</th><th>이름</th><th>집 주소</th>
+        </tr>
+        <tr>
+            <td width="100">1</td><td>신대웅</td><td>모란역 남자화장실 1사로</td>
+        </tr>
+        <tr>
+            <td>2</td><td>서지민</td><td>고속터미널 여자화장실 2사로</td>
+        </tr>
+    </table>
+    <br/>
+    열병합 행병합<br>
+    <table border="1" width="200">
+        <tr width="200"> <!-- 들여쓰기는 가독성을 위해서. 들여쓰기 안해도 error는 안생김-->
+            <td colspan="2">a</td> <!-- colspan : 열병합 -->
+            <td>b</td>
+            <td rowspan="2">c</td> <!-- rowspan : 행병합 -->
+        </tr>
+        <tr>
+            <td>d</td>
+            <td>cell(셀)</td>
+            <td>
+                <table border="2"> <!-- table안에 table-->
+                    <tr>
+                        <td>kor</td>
+                        <td>eng</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+<hr>
+---------- form 태그(자료 입력용 태그) --------------
+<form method="get">
+    1. 이름 : <input type="text" name="name" id="irum" value="아자쓰" size="30" readonly><br> <!-- name은 중복 가능, id는 중복 불가, readonly는 읽기만 가능하게 함-->
+    2. 비밀번호 : <input type="password" name="pwd"/><br>
+    3. 메세지 : <textarea name="msg" cols="50" rows="5"></textarea><br> <!-- textarea는 multiline textbox-->
+    4.  학년 :   <input type="radio" name="hak" value="1" checked> 1학년 <!-- radio는 1개 check되어야 함.-->
+                <input type="radio" name="hak" value="2"> 2학년
+                <input type="radio" name="hak2" value="3"> 3학년
+                <input type="radio" name="hak2" value="4"> 4학년 <br>
+    5. 과목 : <input type="checkbox" name="gwa" value="python"> 파이썬&nbsp;&nbsp;&nbsp; <!-- checkbox는 여러개 check될 수 있음. check안돼도 되고.-->
+                <input type="checkbox" name="gwa" value="C"> C&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="gwa" value="java"> java&nbsp;&nbsp;&nbsp; <br>
+    6. 지역 : <select name="addr" multiple> <!-- multiple은 잘 안쓰지만 복수형으로 고를 수 있음-->
+        <option value="c" selected>시청</option>
+        <option value="j">종로</option>
+        <option value="g">강남</option>
+    </select>
+    <br>
+    7. 파일첨부 <input type="file" name="fname"><br>
+    8. 숨김 : <input type="hidden" name="ji" value="대한민국">
+    <br><br>
+    <input type="submit" value="전송 확인">
+    <input type="reset" value="입력 취소">
+</form>
+</body>
+</html>

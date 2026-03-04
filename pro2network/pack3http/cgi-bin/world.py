@@ -15,6 +15,10 @@ print('''<html lang="kr">
 <body>
     <h1>World 페이지</h1>
     자료 출력 : {0} {1}
+    <br/>
+    <img src="../images/bungsin.jpg" width="400" height="550">
+    <br/>
+    <a href="../index.html">메인으로</a>
 </body>
 </html>
 '''.format(s1,s2))

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> #css, java가 여기 들어감
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>몰리얌 반찬을 뺏어버려</title>
+</head>
+<body> #우리 눈에 보이는 목록들이 여기 들어감
+Tag : 문서의 구조와 형태를 표현하는 명령어로 <>안에 적는다 <br></br>
+공백 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>볼드체</b> 라인스킾은 br<br> bbbbbbbb     ccccccccccccc<br>
+---- 출력 형태에 따른 태그 종류 ---- <br>
+1) block 방식 : 행 분리가 이루어짐 : p, h, div, ol, li ...<br>
+2) inline 방식 : 같은 행에 계속 출력(행분리X) : b, i, span ... 
+<!-- html 주석 -->
+<hr> <!-- 수평선 만드는 태그-->
+<p><b>문단나누기</b></p>
+<i>이텔릭으로 표시</i>
+작업 계속
+<h1>표제용 제목 가장 큼</h1>
+<h6>표제용 제목 가장 작음</h6>
+<div style="background-color: yellow;">  구역 설정 태그(행 전체) </div> good div에는 라인스킾이 있음
+<span style="background-color: aqua;"> 구역 설정 태그(일부 영역) </span> good span에너는 라인스킾이 없음
+<b>&lt;특수문자 표시&gt;</b> <br>
+<hr size="10" width="500" color="block"> <!-- tag에 속성 부여하는 법 -->
+<hr width="60%" color="#0000ff"> <!-- width는 browesr의 가로축의 60%를 의미함, color는 RGB를 16진수화시켜서 색을 줌-->
+<pre>
+    내가    입력한
+        대로       그   대  로
+            보  여  줘
+</pre>
+<br>
+--- 목록 만들기 ---
+<ul>
+    <li>파이썬</li> <!-- li 태그는 혼자서는 못쓰는 종속 태그임-->
+    <li>mariadb</li>
+</ul>
+<ol>
+    <li>파이썬</li>
+    <li>mariadb</li>
+    <ul>
+        <li>파이썬</li> <!-- li 태그는 혼자서는 못쓰는 종속 태그임-->
+        <li>mariadb</li>
+    </ul>
+</ol>
+<a href="web_prob1.html">홈페이지</a>
+</body>
+</html>

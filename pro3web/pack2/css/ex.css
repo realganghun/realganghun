@@ -1,0 +1,31 @@
+/* 이거는 css파일의 주석
+ㅁㄴㄹㄴ*/
+
+#myid2{
+    background-color: yellow;
+    color: red;
+    font-size: 20px;
+}
+
+/* 동적 선택자 */
+/*input:focus{background-color: #aabbcc;}*/
+/*input:focus{background-color: silver;}*/
+/*input:focus{background-color: rgb(30, 120, 200);}*/
+input:focus{background-color: rgb(100%, 50%, 30%);} /*focus가 향한 곳 배경색깔이 바뀜*/
+
+a:link{text-decoration: none;} /* hypertext에 밑줄을 지워줄 수 있음*/
+a:hover{color : orange; font-size: 30px;} /*hover는 hypertext에 손 올리면 글자가 커지는거*/
+/*css는 데이터 모양은 그대로, 꾸미기에 쓰는 것임*/
+
+/* 선택 연습 */
+b{font-size: 8px;}
+div b{font-size: 16px; color: red;} /* div tag 자손들 모두 적용 */
+div > b{font-size: 30px; color: aqua;} /* div tag 직계 자식들'만' 적용*/
+div b#hi{font-size: 40px; color: blueviolet;}
+div b.hello{font-size: 50px; color: chartreuse;}
+
+img{
+    float:unset;
+}
+
+h1{font-size: 40px; color: crimson;}

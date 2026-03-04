@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+--- 변수 --- <br>
+<script type="text/javascript"> 
+// 한줄 주석 
+/* 여러 줄 주석 */
+    // var aa; // 전통적 방식의 변수 선언
+    let aa; // 모던(modern)한 변수 선언
+    aa = 100;
+    let bb = 20.5;
+    const cc = 300;
+    bb = bb + 10;
+    // cc = cc + 10; // error발생(c는 상수값이기 때문에.)
+    let dd = false; // boolean값 출력
+    let msg = "변수 선언 이해"
+    document.write("aa는 ", aa);
+    document.write("bb는 ", bb, " ", cc, " ", dd, " ", msg);
+    document.write("<hr>") // document.write() <- 안에는 html문법 적용됨.
+    document.write("type 확인 : ", "<br>", 
+    "type of 1 : ", typeof(1), "<br>", 
+    "type of -1.5 : ", typeof(-1.5), "<br>", 
+    "type of '안녕' : ", typeof('안녕'), "<br>", 
+    "type of true : ", typeof(true), "<br>", 
+    "type of null : ", typeof(null), "<br>", 
+    "type of undefined : ", typeof(undefined), "<br>")
+    { // 영역 확보
+        let v1 = 1; // let : 지역 변수 선언, var : 전역 변수 선언
+        document.write("v1 : ", v1, "<br>")
+        {
+            let v2 = 2;
+            document.write("v2 : ", v2, "<br>")
+            {
+                let v3 = 3;
+                document.write("v3 : ", v3, "<br>")
+                document.write(v1, ' ', v2, " ", v3, "<br>")
+            }
+        }
+    }
+    document.write(v1, ' ', v2, " ", v3) // error발생: Uncaught ReferenceError: v1 is not defined, 변수가 정의된 영역 바깥에서 변수를 사용함
+</script>
+---- 연산자 ----
+<script>
+let x = 5, y = 2;
+document.write("<br>");
+document.write("산술 연산자<br>",
+    "x = ", x, "<br>",
+    "y = ", y, "<br>",
+    "x+y = ", x+y, "<br>",
+    "x-y = ", x-y, "<br>",
+    "x/y = ", x/y, "<br>",
+    "x%y = ", x%y, "<br>");
+document.write("관계 연산자<br>",
+    "x = ", x, "<br>",
+    "y = ", y, "<br>",
+    "x>y : ", x>y, "<br>",
+    "x<=y : ", x<=y, "<br>",
+    "x==y : ", x==y, "<br>",
+    "x!=y : ", x!=y, "<br>");
+document.write("논리 연산자<br>", //&& - and, || - or
+    "x = ", x, "<br>",
+    "y = ", y, "<br>",
+    "x>y && x<=y : ", x>y && x<=y, "<br>",
+    "x>y || x<=y : ", x>y || x<=y, "<br>");
+document.write("누적 연산자<br>",
+    "x = ", x, "<br>",
+    "y = ", y, "<br>",
+    "x=x+1 : ", x=x+1, "<br>",
+    "++x : ", ++x, "<br>",
+    "x+=1 : ", x+=1, "<br>");
+document.write("삼항 연산자<br>",
+    "x = ", x, "<br>",
+    "y = ", y, "<br>",
+    "(x>y)?1000:1000+2000 : ", (x>y)?1000:1000+2000, "<br>"); // 조건이 참이면 ? 다음절, 거짓이면 ? 다다음절
+    //연산자 우선순위는 py와 동일
+document.write("문자열 더하기 : "+"a"+"b"+"c", "<br>"); // 문자열 더하기
+
+let m, b, c;
+m = b = c = 6 + 5; // 할당 연산 chaining
+document.write(m, b, c)
+</script>
+</body>
+</html>

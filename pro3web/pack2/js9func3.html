@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ES6부터는 화살표 함수(arrow function)라는 새로운 문법 방식으로 함수를 만들 수 있게 되었다. 
+화살표 함수는 => 기호를 사용하여 function 키워드를 생략할 수 있다. <br>
+함수 표현식보다 단순하고 문법으로 함수 처리가 가능해진다<br>
+형식 : let 변수 = (매개변수1, ...) => {표현식}<br>
+<script>
+    'use strict'; /* 엄격한 문법 적용하겠다는 뜻*/
+
+    function sum0(a,b){
+        return a + b;
+    }
+    document.write(sum0(4,5) + "<br>")
+
+    let sum1 = function(a,b){
+        return a + b;
+    }
+    document.write(sum1(5,6) + "<br>")
+
+    let sum2 = (a, b) => a + b
+    document.write(sum2(6,7) + "<br>")
+
+    let sum3 = (a, b) => {return a + b}
+    document.write(sum3(7,8) + "<br>")
+
+    let double1 = n => n * 2; /* 인자가 하나면 괄호 생략 가능!*/
+    document.write(`결과는 ${double1(7)} <br>`)
+
+    let sayHi = () => document.write("안녕하세요<br>");
+    sayHi();
+
+    let age = 35;
+    let welcome = (age > 30)?() => document.write("반갑습니다<br>"):document.write("방가방가<br>"); /*조건 맞으면 왼쪽, 안맞으면 오른쪽*/
+    welcome();
+
+    let sumFunc = (a, b) => {
+        let result = a + b;
+        return result;
+    }
+    document.write(`두 수의 합은 ${sumFunc(5,6)}`)
+</script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.onload = () => {
+            document.querySelector("#btnGet").onclick = getFunc; //getFunc는 실행한다는 뜻, getFunc()는 실행 결과를 넘김
+            document.querySelector("#btnPost").onclick = postFunc;
+        }
+
+        let xhr;
+
+        function getFunc(){ //ajax의 개념
+            let irum = frm.name.value;
+            let nai = frm.age.value;
+            // alert(irum + " " + nai);
+
+            xhr = new XMLHttpRequest(); //서버와 Ajax통신용 class
+            let fname = "js16.py?irum=" + irum + "&nai=" + nai; // 임시방편용 js16.py 작성(얘는 처리 후 json을 반환한다고 가정)
+            xhr.open("GET", fname, true); // true : 비동기, false : 동기
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4 && xhr.status === 200){
+                    process1();
+                }
+            }
+            xhr.send();
+        }
+
+        function postFunc(){
+            let irum = frm.name.value;
+            let nai = frm.age.value;
+            // alert(irum + " " + nai);
+
+            xhr = new XMLHttpRequest(); //서버와 Ajax통신용 class
+            let fname = "js16.py"; // get방식과 차이점!!
+            xhr.open("POST", fname, true); // true : 비동기, false : 동기
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4 && xhr.status === 200){
+                    process1();
+                }
+            }
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+            xhr.send("irum=" + irum + "&nai=" + nai); //body 영역에 포함되어 전송(대용량 전송 가능), get방식과 차이점
+        }
+
+        function process1(){
+            alert(xhr.responseText);
+        }
+    </script>
+</head>
+<body>
+    <h2>Ajax 이해 : get, post</h2>
+    <form name="frm">
+        이름 : <input type="text" name="name" value="tom"><br>
+        나이 : <input type="text" name="age" value="33"><br>
+        <input type="button" value="get 방식" id="btnGet">
+        <input type="button" value="post 방식" id="btnPost">
+    </form>
+</body>
+</html>

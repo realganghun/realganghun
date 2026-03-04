@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+--- 반복문 for(초기값; 조건; 증가값) ---<br>
+<script>
+    document.write("<hr>")
+    let a =1 ;
+    for(a=1; a <= 5; a=a+1){ //for(let a=1; a <= 5; a+=1)와 동격, for(let a=1; a <= 5; a++)와 동격
+        document.write("a값은 " + a + "<br>");
+    }
+    document.write("for 블럭 수행 후 a 값은 " + a +"<br>")
+document.write("<hr>")
+    for(let a = 5; a >= 1; a--){ //for(let a=1; a <= 5; a-=1)와 동격, for(let a=1; a <= 5; a=a-1)와 동격
+        document.write("a값은 " + a + "<br>");
+    }
+document.write("<hr>")
+    for(let a = 3; a < 11; a += 2){
+        document.write("a값은 " + a + "<br>");
+    }
+document.write("<hr>");
+document.write("다중 for <br>");
+    for(let i = 1; i <= 3; i++){
+        document.write("i값은 =>" + i + "&nbsp;&nbsp;");
+        for(let j = 1; j <= i; j++){
+            document.write("j값 : " + j + "&nbsp;&nbsp;");
+        }
+        document.write("<br>");
+    }
+document.write("<hr>");
+document.write("1에서 45까지의 정수 합은? <br>");
+    let hap = 0;
+    for(let i = 1; i <= 45; i++){
+        hap = hap + i
+    }
+    document.write("1부터 45까지의 정수 합 : ", hap);
+
+    document.write("<hr>1~100까지의 정수 중 2의 배수이나 5의 배수가 아닌 수의 합 출력<br>");
+    let sum = 0;
+    for(let i = 1; i <= 100; i++){
+        if (i % 2 == 0 && i % 5 != 0){ // if (i % 2 === 0 && i % 5 !== 0) ==은 느슨한 동등 비교, ===는 엄격한 일치 비교이므로 ===권장됨
+            sum += i
+            document.write("i = " + i +"&nbsp;&nbsp;&nbsp;" + "sum = " + sum + "<br>");
+        }
+    }
+    document.write("<hr>1~100까지의 정수 중 2의 배수이나 5의 배수가 아닌 수의 합 출력 : ", sum);
+    document.write("<hr>");
+    document.write("2~9단까지 구구단 출력 - table에 출력<br>");
+    document.write("<table border = 1>");
+        for(let a = 2; a < 10; a++){
+            document.write("<tr>");
+                for(let b = 1; b < 10; b++){
+                    // document.write("<td>");
+                    //     document.write(a + "*" + b + "=" + a*b);
+                    // document.write("</td>");
+                    document.write(`<td>${a}*${b}=${a*b}&nbsp;&nbsp;</td>`) //템플릿 문자열
+                }
+            document.write("</tr>");
+        }
+    document.write("</table>");
+</script>
+
+</body>
+</html>
