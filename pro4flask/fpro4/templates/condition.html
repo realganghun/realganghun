@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} 조건문, Jinja2(template engine)이 적용된 python {% endblock %}
+
+{% block content %}
+<h3>조건 연습</h3>
+
+{% if score >= 90 %}
+    <p>성적 : {{score}} -> A등급 </p>
+{% elif score >= 80 %}
+    <p>성적 : {{score}} -> B등급 </p>
+{% else %}
+    <p>성적 : {{score}} -> C등급 </p>
+{% endif %}
+
+{% endblock %}

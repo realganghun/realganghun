@@ -118,3 +118,266 @@ SELECT jikwonname AS 직원명, jikwonpay AS 급여, COUNT(gogekno) AS 고객수
 WHERE jikwonpay > (select avg(jikwonpay) from jikwon) GROUP BY jikwonname ORDER BY jikwonpay DESC;
 
 select jikwonno as 직원번호, jikwonname as 직원명, count(gogekno) as 관리고객수 from jikwon inner join gogek on gogekdamsano=jikwonno GROUP BY jikwonno;
+
+
+CREATE DATABASE IF NOT EXISTS ai_quant
+DEFAULT CHARACTER SET utf8mb4
+DEFAULT COLLATE utf8mb4_unicode_ci;
+
+USE ai_quant;
+
+-- 1. 사용자
+CREATE TABLE users (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    nickname VARCHAR(100) NOT NULL,
+    is_verified TINYINT(1) NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_users_email (email),
+    UNIQUE KEY uk_users_nickname (nickname)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DESC users;
+-- 2. 모의투자 계좌
+CREATE TABLE mock_accounts (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
+    initial_balance DECIMAL(15,2) NOT NULL DEFAULT 10000000.00,
+    current_balance DECIMAL(15,2) NOT NULL DEFAULT 10000000.00,
+    total_profit_loss DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_mock_accounts_user_id (user_id),
+    CONSTRAINT fk_mock_accounts_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3. 주식 기본 정보
+CREATE TABLE stocks (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    ticker VARCHAR(30) NOT NULL,
+    name_kr VARCHAR(100) NOT NULL,
+    market VARCHAR(30) NOT NULL,
+    sector VARCHAR(50) DEFAULT NULL,
+    is_defense TINYINT(1) NOT NULL DEFAULT 0,
+    description TEXT DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_stocks_ticker (ticker),
+    KEY idx_stocks_is_defense (is_defense),
+    KEY idx_stocks_market (market)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 4. 주식 상세/최신 시세
+CREATE TABLE stock_details (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    stock_id BIGINT UNSIGNED NOT NULL,
+    current_price DECIMAL(15,2) NOT NULL,
+    change_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+    change_rate DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+    volume BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    market_cap BIGINT UNSIGNED DEFAULT NULL,
+    per_value DECIMAL(10,2) DEFAULT NULL,
+    pbr_value DECIMAL(10,2) DEFAULT NULL,
+    high_price DECIMAL(15,2) DEFAULT NULL,
+    low_price DECIMAL(15,2) DEFAULT NULL,
+    open_price DECIMAL(15,2) DEFAULT NULL,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_stock_details_stock_id (stock_id),
+    CONSTRAINT fk_stock_details_stock
+        FOREIGN KEY (stock_id) REFERENCES stocks(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 5. 주식 히스토리
+CREATE TABLE stock_price_history (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    stock_id BIGINT UNSIGNED NOT NULL,
+    price_date DATE NOT NULL,
+    open_price DECIMAL(15,2) NOT NULL,
+    high_price DECIMAL(15,2) NOT NULL,
+    low_price DECIMAL(15,2) NOT NULL,
+    close_price DECIMAL(15,2) NOT NULL,
+    volume BIGINT UNSIGNED NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_stock_price_history (stock_id, price_date),
+    KEY idx_stock_price_history_date (price_date),
+    CONSTRAINT fk_stock_price_history_stock
+        FOREIGN KEY (stock_id) REFERENCES stocks(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 5. 거래내역
+CREATE TABLE trades (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
+    stock_id BIGINT UNSIGNED NOT NULL,
+    trade_type ENUM('BUY', 'SELL') NOT NULL,
+    price DECIMAL(15,2) NOT NULL,
+    quantity INT UNSIGNED NOT NULL,
+    total_amount DECIMAL(15,2) NOT NULL,
+    strategy VARCHAR(100) DEFAULT NULL,
+    traded_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_trades_user_id (user_id),
+    KEY idx_trades_account_id (account_id),
+    KEY idx_trades_stock_id (stock_id),
+    KEY idx_trades_traded_at (traded_at),
+    CONSTRAINT fk_trades_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_trades_account
+        FOREIGN KEY (account_id) REFERENCES mock_accounts(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_trades_stock
+        FOREIGN KEY (stock_id) REFERENCES stocks(id)
+        ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 6. 현재 보유 종목
+CREATE TABLE portfolio_holdings (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
+    account_id BIGINT UNSIGNED NOT NULL,
+    stock_id BIGINT UNSIGNED NOT NULL,
+    quantity INT UNSIGNED NOT NULL DEFAULT 0,
+    avg_buy_price DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+    total_invested DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_portfolio_user_stock (user_id, stock_id),
+    KEY idx_portfolio_account_id (account_id),
+    CONSTRAINT fk_portfolio_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_portfolio_account
+        FOREIGN KEY (account_id) REFERENCES mock_accounts(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_portfolio_stock
+        FOREIGN KEY (stock_id) REFERENCES stocks(id)
+        ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 7. 뉴스
+CREATE TABLE news (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title VARCHAR(300) NOT NULL,
+    summary TEXT DEFAULT NULL,
+    content LONGTEXT DEFAULT NULL,
+    source VARCHAR(100) NOT NULL,
+    source_url VARCHAR(500) DEFAULT NULL,
+    thumbnail_url VARCHAR(500) DEFAULT NULL,
+    view_count INT UNSIGNED NOT NULL DEFAULT 0,
+    published_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_news_view_count (view_count),
+    KEY idx_news_published_at (published_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 8. 뉴스 AI 분석
+CREATE TABLE news_analysis (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    news_id BIGINT UNSIGNED NOT NULL,
+    stock_id BIGINT UNSIGNED DEFAULT NULL,
+    ai_score DECIMAL(5,2) NOT NULL DEFAULT 0.00,
+    sentiment ENUM('POSITIVE', 'NEUTRAL', 'NEGATIVE') NOT NULL DEFAULT 'NEUTRAL',
+    ai_summary TEXT DEFAULT NULL,
+    keywords VARCHAR(500) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_news_analysis_stock_id (stock_id),
+    CONSTRAINT fk_news_analysis_news
+        FOREIGN KEY (news_id) REFERENCES news(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_news_analysis_stock
+        FOREIGN KEY (stock_id) REFERENCES stocks(id)
+        ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=UTF8MB4_UNICODE_CI;
+
+
+INSERT INTO stocks (ticker, name_kr, market, sector, is_defense, description) VALUES
+('064350','현대로템','KOSPI','defense',1,'방산 및 철도 차량 제작 기업'),
+('012450','한화에어로스페이스','KOSPI','defense',1,'항공엔진 및 방산 시스템 기업'),
+('079550','LIG넥스원','KOSPI','defense',1,'유도무기 및 방위 시스템 개발'),
+('272210','한화시스템','KOSPI','defense',1,'방산 전자 및 ICT 시스템 기업'),
+('047810','한국항공우주','KOSPI','defense',1,'군용 항공기 및 항공우주 개발'),
+('077970','STX엔진','KOSPI','defense',1,'선박 및 방산용 엔진 제조'),
+('024740','한일단조','KOSDAQ','defense',1,'단조 부품 및 방산 부품 생산'),
+('038060','루멘스','KOSDAQ','defense',1,'LED 및 전자 부품 제조'),
+('007120','미래아이앤지','KOSDAQ','defense',1,'IT 및 시스템 통합 기업'),
+('032820','우리기술','KOSDAQ','defense',1,'원전 및 방산 제어 시스템'),
+('368770','파이버프로','KOSDAQ','defense',1,'광섬유 기반 센서 및 방산 기술'),
+('230980','비유테크놀러지','KOSDAQ','defense',1,'IT 및 기술 서비스 기업'),
+('009540','HD한국조선해양','KOSPI','defense',1,'조선 및 해양 방산 관련 기업'),
+('003570','SNT다이내믹스','KOSPI','defense',1,'방산용 변속기 및 기계 부품'),
+('005810','풍산홀딩스','KOSPI','defense',1,'풍산 그룹 지주사'),
+('108380','대양전기공업','KOSDAQ','defense',1,'선박 및 방산 전기 시스템'),
+('372910','한컴라이프케어','KOSDAQ','defense',1,'방독면 및 안전 장비 제조'),
+('006050','국영지앤엠','KOSDAQ','defense',1,'특수 유리 및 방산 소재'),
+('095190','이엠코리아','KOSDAQ','defense',1,'기계 및 방산 부품 제조'),
+('042660','한화오션','KOSPI','defense',1,'잠수함 및 군함 건조'),
+('010820','퍼스텍','KOSDAQ','defense',1,'방산 전자 및 무기 시스템'),
+('015710','코콤','KOSDAQ','defense',1,'보안 및 통신 장비 제조'),
+('013810','스페코','KOSDAQ','defense',1,'방산 및 중장비 제조'),
+('040300','YTN','KOSDAQ','defense',1,'보도 전문 방송사'),
+('003010','혜인','KOSPI','defense',1,'중장비 및 산업 장비 유통'),
+('274090','켄코아에어로스페이스','KOSDAQ','defense',1,'항공기 부품 제조'),
+('119500','포메탈','KOSDAQ','defense',1,'단조 및 기계 부품 제조'),
+('035460','기산텔레콤','KOSDAQ','defense',1,'통신 장비 및 네트워크 장비'),
+('361390','제노코','KOSDAQ','defense',1,'우주 및 방산 전자 시스템'),
+('064960','SNT모티브','KOSPI','defense',1,'자동차 및 방산 부품'),
+('096630','에스코넥','KOSDAQ','defense',1,'전자 부품 제조'),
+('377330','이지트로닉스','KOSDAQ','defense',1,'전력 변환 및 전자 기술'),
+('065950','웰크론','KOSDAQ','defense',1,'특수 섬유 및 방산 소재'),
+('095270','웨이브일렉트로','KOSDAQ','defense',1,'RF 및 통신 장비'),
+('042370','비츠로테크','KOSDAQ','defense',1,'전력 및 방산 기술 기업'),
+('103140','풍산','KOSPI','defense',1,'방산 탄약 및 구리 소재'),
+('010280','아이티센엔텍','KOSDAQ','defense',1,'IT 서비스 및 시스템 통합'),
+('215090','솔디펜스','KOSDAQ','defense',1,'방산 장비 및 시스템'),
+('000880','한화','KOSPI','defense',1,'방산 및 화학 사업 보유'),
+('005870','휴니드','KOSPI','defense',1,'군용 통신 장비 제조'),
+('077360','덕산하이메탈','KOSDAQ','defense',1,'전자 소재 및 부품'),
+('065450','빅텍','KOSDAQ','defense',1,'군용 전자 및 방산 장비'),
+('000270','기아','KOSPI','defense',1,'군용 차량 및 자동차 제조'),
+('088800','에이스테크','KOSDAQ','defense',1,'통신 장비 제조'),
+('003490','대한항공','KOSPI','defense',1,'항공 및 군용 항공기 정비'),
+('214430','아이쓰리시스템','KOSDAQ','defense',1,'적외선 센서 및 방산 기술'),
+('011210','현대위아','KOSPI','defense',1,'방산 포 및 기계 시스템'),
+('068790','DMS','KOSDAQ','defense',1,'디스플레이 및 장비 제조');
+
+INSERT INTO stock_details
+(stock_id, current_price, change_amount, change_rate, volume, market_cap, per_value, pbr_value, high_price, low_price, open_price)
+VALUES
+(1, 820000.00, 12000.00, 1.49, 150000, 37000000000000, 24.50, 3.10, 825000.00, 801000.00, 808000.00),
+(2, 245000.00, 3500.00, 1.45, 98000, 5400000000000, 18.20, 2.80, 247000.00, 239000.00, 241500.00),
+(3, 98000.00, -1200.00, -1.21, 120000, 3200000000000, 14.70, 1.90, 100000.00, 97500.00, 99200.00);
+
+
+SHOW TABLES;
+
+DESC stock_price_history;
+
+SELECT * FROM stock_price_history;
+SELECT * FROM stocks;
+DROP TABLE stocks;
+DELETE FROM stocks WHERE id=1;
+DELETE FROM stocks WHERE id=2;
+DELETE FROM stocks WHERE id=3;
+
+SELECT *
+FROM stock_details
+LIMIT 10;
+
+SELECT name_kr, volume
+FROM stock_details
+JOIN stocks ON stocks.id = stock_details.stock_id
+LIMIT 10;

@@ -1,0 +1,11 @@
+{
+    "status" : "success", 
+    "count" : 5, 
+    "data" : [
+        {"id" : 1 , "name" : "양건", "dept" : "영업부", "salary" : 6500},
+        {"id" : 2 , "name" : "김세원", "dept" : "총무부", "salary" : 4300},
+        {"id" : 3 , "name" : "김낙형", "dept" : "전산부", "salary" : 5400},
+        {"id" : 4 , "name" : "서지민", "dept" : "인사부", "salary" : 9300},
+        {"id" : 5 , "name" : "신대웅", "dept" : "영업부", "salary" : 2400}
+    ] 
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>GET방식 요청(요청명?변수=값&변수=값)</h2>
+    방법1 : <br>
+    <a href="/get_result?username=관우&age=35">get으로 자료 전달</a>
+    <br>
+    방법2 : <br>
+    <form action="get_result" method="get">
+        이름 : <input type="text" name="username"><br>
+        나이 : <input type="number" name="age"><br>
+        <input type="submit" value="전송">
+    </form>
+    <!-- 방법1과 방법2는 결과가 같다!! 차이점은 방법1은 내가 이름 나이 정하는거고 방법2는 내가 입력하는 것임-->
+</body>
+</html>
