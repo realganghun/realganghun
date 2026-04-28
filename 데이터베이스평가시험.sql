@@ -303,6 +303,18 @@ CREATE TABLE news_analysis (
         ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=UTF8MB4_UNICODE_CI;
 
+CREATE TABLE stock_news (
+    stock_id BIGINT UNSIGNED NOT NULL,
+    score INT NOT NULL,
+    ai_summary TEXT,
+    news_data JSON,  
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (stock_id),
+    CONSTRAINT fk_stock_news_stock 
+        FOREIGN KEY (stock_id) REFERENCES stocks(id) 
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 INSERT INTO stocks (ticker, name_kr, market, sector, is_defense, description) VALUES
 ('064350','현대로템','KOSPI','defense',1,'방산 및 철도 차량 제작 기업'),
@@ -367,6 +379,7 @@ SHOW TABLES;
 DESC stock_price_history;
 
 SELECT * FROM stock_price_history;
+SELECT * FROM stock_details;
 SELECT * FROM stocks;
 DROP TABLE stocks;
 DELETE FROM stocks WHERE id=1;
@@ -381,3 +394,112 @@ SELECT name_kr, volume
 FROM stock_details
 JOIN stocks ON stocks.id = stock_details.stock_id
 LIMIT 10;
+
+SELECT stock_id, price_date, COUNT(*) AS cnt
+FROM stock_price_history
+GROUP BY stock_id, price_date
+HAVING COUNT(*) > 1;
+
+ALTER TABLE stock_price_history ADD CONSTRAINT uq_stock_price_history_stock_date UNIQUE (stock_id, price_date);
+ALTER TABLE etf_price_history ADD CONSTRAINT uq_etf_price_history_etf_date UNIQUE (etf_id, price_date);
+
+
+CREATE TABLE etfs (
+id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+ ticker VARCHAR(30) NOT NULL,
+ name_kr VARCHAR(100) NOT NULL, 
+ market VARCHAR(30) NOT NULL, 
+ theme VARCHAR(50) DEFAULT NULL, 
+ description TEXT DEFAULT NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (id),
+ UNIQUE KEY uk_etfs_ticker (ticker), 
+ KEY idx_etfs_market (market), 
+ KEY idx_etfs_theme (theme) 
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE etf_price_history (users
+id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+etf_id BIGINT UNSIGNED NOT NULL, 
+price_date DATE NOT NULL, 
+open_price DECIMAL(15,2) NOT NULL, 
+high_price DECIMAL(15,2) NOT NULL, 
+low_price DECIMAL(15,2) NOT NULL, 
+close_price DECIMAL(15,2) NOT NULL,
+volume BIGINT UNSIGNED NOT NULL DEFAULT 0, 
+created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+PRIMARY KEY (id), 
+UNIQUE KEY uk_etf_price_history (etf_id, price_date), 
+KEY idx_etf_price_history_date (price_date), 
+KEY idx_etf_price_history_etf_id (etf_id), 
+CONSTRAINT fk_etf_price_history_etf 
+FOREIGN KEY (etf_id) REFERENCES etfs(id) 
+ON DELETE CASCADE )
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=UTF8MB4_UNICODE_CI;
+
+INSERT INTO etfs (id, ticker, name_kr, market) VALUES (1, 463250,'tiger', 'etf');
+
+SELECT * FROM etf_price_history;
+
+ALTER TABLE stock_details
+ADD COLUMN trading_value BIGINT;
+
+DELETE FROM users;
+
+DESC etf_price_history;
+DESC etfs;
+DESC mock_accounts;
+DESC news;
+DESC news_analysis;
+DESC portfolio_holdings;
+DESC stock_details;
+DESC stock_price_history;
+DESC stocks;
+DESC trades;
+DESC users;
+
+SELECT * FROM stock_details;
+SELECT * FROM stocks;
+SELECT * FROM users;
+SELECT * FROM stock_chats;
+
+ALTER TABLE users ADD COLUMN avatar VARCHAR(10) DEFAULT '🧑‍�';
+
+
+CREATE TABLE stock_chats (
+id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+user_id BIGINT UNSIGNED NOT NULL,
+ stock_id BIGINT UNSIGNED NOT NULL,
+message TEXT NOT NULL,
+created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (id),
+CONSTRAINT fk_stock_chats_user
+FOREIGN KEY (user_id) REFERENCES users(id)
+ON DELETE CASCADE,
+CONSTRAINT fk_stock_chats_stock
+FOREIGN KEY (stock_id) REFERENCES stocks(id)
+ON DELETE CASCADE
+);
+
+INSERT INTO stock_chats (user_id, stock_id, message)
+VALUES
+(24, 100, '오늘 거래량 괜찮은데요?'),
+(25, 100, '단기 반등 가능성 있어 보여요'),
+(26, 100, '뉴스 보고 들어왔어요'),
+(27, 100, '이 종목은 실적 체크가 먼저인 듯'),
+(28, 100, '장기적으로는 괜찮아 보입니다');
+
+INSERT INTO stocks (id, ticker, name_kr, market, sector, is_defense)
+VALUES (9999, 'DEFENSE_ALL', '방산 업종 종합', 'SECTOR', 'Defense', 1);
+
+ALTER TABLE portfolio_holdings
+    ADD COLUMN strategy VARCHAR(50) NOT NULL DEFAULT '수동 운용'
+    AFTER total_invested;
+    
+ALTER TABLE portfolio_holdings
+    ADD UNIQUE KEY uq_user_stock_strategy (user_id, stock_id, strategy);
+    
+ALTER TABLE portfolio_holdings
+    DROP INDEX uk_portfolio_user_stock;
+    
+SHOW INDEX FROM portfolio_holdings;

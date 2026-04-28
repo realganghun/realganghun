@@ -43,7 +43,18 @@ ES6부터는 화살표 함수(arrow function)라는 새로운 문법 방식으�
         let result = a + b;
         return result;
     }
-    document.write(`두 수의 합은 ${sumFunc(5,6)}`)
+    document.write(`두 수의 합은 ${sumFunc(5, 7)}`)
+    
+    let func = function(num){
+        return (num % 2 == 1) ? "홀":"짝";
+    }
+    document.write(func(5))
+
+    let add = (a, b = 10) => {
+        let result = a + b;
+        return result;
+    }
+    document.write(`<hr>합 : ${add(5,5)}`)
 </script>
 
 </body>

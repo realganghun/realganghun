@@ -1,0 +1,34 @@
+# 전통적 방식의 선형회귀(기계학습 중 지도학습)
+print('방법4 : make_regression 사용. model 생성 X')
+
+from scipy import stats
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+#IQ에 따른 시험 점수 예측
+score_iq = pd.read_csv('https://raw.githubusercontent.com/pykwon/python/refs/heads/master/testdata_utf8/score_iq.csv')
+print(score_iq.head(3))
+
+x=score_iq.iq
+y=score_iq.score
+
+print(x[:3])
+print(y[:3])
+
+print('상관계수 : ', np.corrcoef(x, y)[0, 1])
+print(score_iq[['iq', 'score']].corr())
+
+plt.scatter(x, y)
+plt.show()
+
+# 단순 선형회귀분석
+model = stats.linregress(x, y)
+print(model) #LinregressResult(slope=np.float64(0.6514309527270089), intercept=np.float64(-2.8564471221976504), ...
+print('기울기 : ', model.slope)
+print('절편 : ', model.intercept)
+print('p값 : ', model.pvalue)
+
+plt.scatter(x,y)
+plt.plot(x, model.slope * x + model.intercept, c='r')
+plt.show()

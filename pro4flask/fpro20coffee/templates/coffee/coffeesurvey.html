@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>커피 전문점에 대한 소비자 인식 조사</h3>
+    <form action="/coffee/surveyprocess" method="post">
+        <tr>
+            <td>당신의 성별은?</td>
+            <td>
+                <br>
+                <label for="genM">남성</label>
+                <input type="radio" id="genM" name="gender" value="남성" checked>
+                &nbsp;&nbsp;
+                <label for="genF">여성</label>
+                <input type="radio" id="genF" name="gender" value="여성">
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>당신의 나이는?</td>
+            <td>
+                <br>
+                <label for="age10">10대</label>
+                <input type="radio" id="age10" name="age" value="10" checked>
+                &nbsp;&nbsp;
+                <label for="age20">20대</label>
+                <input type="radio" id="age20" name="age" value="20">
+                &nbsp;&nbsp;
+                <label for="age30">30대</label>
+                <input type="radio" id="age30" name="age" value="30">
+                &nbsp;&nbsp;
+                <label for="age40">40대</label>
+                <input type="radio" id="age40" name="age" value="40">
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>좋아하는 커피 브랜드는?</td>
+            <br>
+            <td>
+                <label for="brand1">스타벅스</label>
+                <input type="radio" id="starbucks" name="co_survey" value="스타벅스" checked>
+                &nbsp;&nbsp;
+                <label for="brand2">이디야</label>
+                <input type="radio" id="ediya" name="co_survey" value="이디야">
+                &nbsp;&nbsp;
+                <label for="brand3">탐앤탐스</label>
+                <input type="radio" id="tomandtoms" name="co_survey" value="탐앤탐스">
+                &nbsp;&nbsp;
+                <label for="brand4">폴바셋</label>
+                <input type="radio" id="polbaset" name="co_survey" value="폴바셋">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                <br>
+                <input type="submit" value="제출">
+                <input type="reset" value="초기화">
+            </td>
+    </form>
+</body>
+</html>

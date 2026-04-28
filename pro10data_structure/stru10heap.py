@@ -1,0 +1,29 @@
+# Heap : 모든 노드가 특정한 순서를 유지하며 구성된 완전이진트리 형태의 자료구조
+# 내부 구현 없이 Heap 개념 이해하기
+import heapq    # 기본이 Min Heap
+
+# Min Heap
+heap = []
+
+heapq.heappush(heap, 30)
+heapq.heappush(heap, 10)
+heapq.heappush(heap, 20)
+print('현재 힙 상태 : ', heap)  # 내부적으로 힙 구조가 유지
+
+# 최소값 꺼내기
+print('가장 작은값 : ', heapq.heappop(heap)) # 힙합? ㅋ
+print('가장 작은값 : ', heapq.heappop(heap))
+print('남은 힙 : ', heap)
+
+# Man Heap
+heap = []
+
+heapq.heappush(heap, -30)   # Max Heap 으로 사용하기 위해 -를 붙이는 트릭 사용
+heapq.heappush(heap, -10)
+heapq.heappush(heap, -20)
+print('현재 힙 상태 : ', heap)  # 내부적으로 힙 구조가 유지
+
+# 최소값 꺼내기
+print('가장 큰값 : ', -heapq.heappop(heap)) # 힙합? ㅋ
+print('가장 큰값 : ', -heapq.heappop(heap))
+print('남은 힙 : ', heap)
